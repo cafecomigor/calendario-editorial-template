@@ -14,8 +14,10 @@ https://cafecomigor.github.io/calendario-editorial-template/
      introdução.
    - `pillars` — as linhas editoriais do mês.
    - `posts` — um item por post: data, tipo (`card` ou `video`), status
-     (`published`, `approved` ou `script`), pilar, título, legenda e o
-     caminho da imagem.
+     (`published`, `approved` ou `script`), pilar, título, legenda e a(s)
+     imagem(ns). Post de imagem única usa `image: "caminho.jpg"`; post em
+     formato carrossel usa `images: ["caminho-1.jpg", "caminho-2.jpg", ...]`
+     — a página detecta sozinha e mostra o seletor de fotos no modal.
 3. Troque os arquivos de `images/` pelas artes reais (mesmo nome ou ajuste o
    campo `image` de cada post em `data.js`).
 4. Não precisa mexer em `style.css` nem `script.js` — eles só leem o
@@ -25,7 +27,8 @@ https://cafecomigor.github.io/calendario-editorial-template/
 
 - Prévia do feed (grid estilo Instagram, mais recente primeiro).
 - Linha editorial organizada por pilar, com os posts de cada um.
-- Calendário clicável com filtro (todos / cards / vídeos).
+- Calendário clicável com filtro (todos / cards / vídeos), com selo de
+  carrossel nos posts de várias fotos.
 - Modal de cada post com a arte (ou roteiro), legenda completa e botão de
   download — individual ou em lote (.zip, só das artes aprovadas).
 - Resumo com contagem de publicados, aprovados, vídeos pendentes e próxima
