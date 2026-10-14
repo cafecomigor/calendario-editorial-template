@@ -51,12 +51,15 @@
     document.getElementById("stat-videos").textContent = videos;
 
     var featured = D.posts.filter(function (p) { return p.date === D.nextPublication; })[0] || D.posts.slice().sort(byDateAsc)[0];
+    var f = document.getElementById("featured-block");
     if (featured) {
-      var f = document.getElementById("featured-block");
+      f.style.display = "";
       f.querySelector(".f-img").src = featured.image;
       f.querySelector(".f-title").textContent = featured.title;
       f.querySelector(".f-meta").textContent = fmtDate(featured.date) + " · " + featured.pillar;
       f.onclick = function () { openModal(featured.id); };
+    } else {
+      f.style.display = "none";
     }
   }
 
@@ -70,12 +73,16 @@
   function renderFeed() {
     var grid = document.getElementById("feed-grid");
     var sorted = D.posts.slice().sort(byDateDesc);
-    grid.innerHTML = sorted.map(function (p) {
-      return '<div class="feed-tile" data-id="' + p.id + '">' +
-        '<img src="' + p.image + '" alt="' + p.title + '" loading="lazy">' +
-        tileBadge(p) +
-        "</div>";
-    }).join("");
+    if (sorted.length === 0) {
+      grid.innerHTML = '<p style="color:var(--ink-faint); grid-column:1/-1;">Nenhum post adicionado ainda.</p>';
+    } else {
+      grid.innerHTML = sorted.map(function (p) {
+        return '<div class="feed-tile" data-id="' + p.id + '">' +
+          '<img src="' + p.image + '" alt="' + p.title + '" loading="lazy">' +
+          tileBadge(p) +
+          "</div>";
+      }).join("");
+    }
     grid.querySelectorAll(".feed-tile").forEach(function (el) {
       el.addEventListener("click", function () { openModal(parseInt(el.dataset.id, 10)); });
     });
@@ -107,14 +114,18 @@
     var sorted = D.posts.slice().sort(byDateAsc).filter(function (p) {
       return filter === "all" || p.type === filter;
     });
-    grid.innerHTML = sorted.map(function (p) {
-      return '<div class="cal-card" data-id="' + p.id + '">' +
-        '<div class="cc-thumb"><img src="' + p.image + '" alt="' + p.title + '" loading="lazy">' +
-        '<span class="cc-status">' + STATUS_LABEL[p.status] + "</span></div>" +
-        '<div class="cc-body"><div class="cc-date">' + fmtDate(p.date) + " · " + (p.type === "video" ? "Vídeo" : "Card") + '</div>' +
-        '<div class="cc-title">' + p.title + "</div></div>" +
-        "</div>";
-    }).join("");
+    if (sorted.length === 0) {
+      grid.innerHTML = '<p style="color:var(--ink-faint);">Nenhum post por aqui ainda.</p>';
+    } else {
+      grid.innerHTML = sorted.map(function (p) {
+        return '<div class="cal-card" data-id="' + p.id + '">' +
+          '<div class="cc-thumb"><img src="' + p.image + '" alt="' + p.title + '" loading="lazy">' +
+          '<span class="cc-status">' + STATUS_LABEL[p.status] + "</span></div>" +
+          '<div class="cc-body"><div class="cc-date">' + fmtDate(p.date) + " · " + (p.type === "video" ? "Vídeo" : "Card") + '</div>' +
+          '<div class="cc-title">' + p.title + "</div></div>" +
+          "</div>";
+      }).join("");
+    }
     grid.querySelectorAll(".cal-card").forEach(function (el) {
       el.addEventListener("click", function () { openModal(parseInt(el.dataset.id, 10)); });
     });
@@ -141,7 +152,7 @@
     document.getElementById("sum-published").textContent = published;
     document.getElementById("sum-approved").textContent = approved;
     document.getElementById("sum-videos").textContent = videos;
-    document.getElementById("sum-next").textContent = fmtDate(D.nextPublication);
+    document.getElementById("sum-next").textContent = D.nextPublication ? fmtDate(D.nextPublication) : "—";
     document.getElementById("sum-priority").textContent = D.priorityDays;
     document.getElementById("footer-client").textContent = D.client.name;
     document.getElementById("footer-production").textContent = D.production;
